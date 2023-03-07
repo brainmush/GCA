@@ -1,0 +1,8 @@
+bs4
+lxml
+flask==2.0.3
+pywebio==1.6.1
+selenium==3.141.0
+urllib3==1.25.10
+gunicorn==20.01.0
+argparse==1.4.0
