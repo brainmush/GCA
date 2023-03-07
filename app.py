@@ -1,3 +1,4 @@
+
 import argparse
 import os
 import re
@@ -13,29 +14,19 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium_stealth import stealth
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_options.add_argument("start-maximized")
-chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-chrome_options.add_experimental_option('useAutomationExtension', False)
+chrome_prefs = {
+    "profile.default_content_setting_values": {
+        "images": 2,
+        "javascript": 2,
+    }
+}
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument('--no-sandbox')
-
+chrome_options.add_argument("--no-sandbox")
 driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-
-
-stealth(driver,
-        languages=["en-US", "en"],
-        vendor="Google Inc.",
-        platform="Win32",
-        webgl_vendor="Intel Inc.",
-        renderer="Intel Iris OpenGL Engine",
-        fix_hairline=True,
-        )
-
 
 # %%
 def get_webpage(gene):
@@ -46,14 +37,14 @@ def get_webpage(gene):
         soup = BeautifulSoup(content,"lxml")
         r = driver.current_url 
 
-        
+
         for a in soup.find('span', attrs={'class':'aliasMainName'}):
             gene_aliases.append(a.text)
- 
-        
+
+
         for a in soup.find_all('span', itemprop = 'alternateName'):
             gene_aliases.append(a.text)
-        
+
         for i in range(len(gene_aliases)):
             gene_aliases[i] = gene_aliases[i].upper()
 
@@ -71,12 +62,12 @@ def get_webpage(gene):
         put_button("New gene",onclick=lambda: run_js('window.location.reload()'))
         raise
     put_text("Got the website")
-   
+
 def clear(lista):
     lista.clear()
 
 def process_aliases(gene_aliases):
-      
+
     for j in gene_aliases:
         if bool(re.search(r'\d', j)) == True:
             j1 = re.sub("[A-Z]+", lambda ele: "" + ele[0] + "_",j)
@@ -117,7 +108,7 @@ def appy():
     put_text("Please wait")
 
     get_webpage(gene)
-    
+
     process_aliases(gene_aliases)
 
     res = [i for n, i in enumerate(marker_aliases) if i not in marker_aliases[:n]]
@@ -137,7 +128,7 @@ def appy():
     clear(gene_aliases)
     clear(marker_aliases)
     clear(gene_description)
-    
+
 # main function
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
