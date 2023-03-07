@@ -25,6 +25,7 @@ options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 driver = uc.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
 chrome_options = uc.ChromeOptions()
+chrome_options.headless=True
 chrome_options.add_argument("--headless")
 
 
