@@ -14,21 +14,17 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_prefs = {
-    "profile.default_content_setting_values": {
-        "images": 2,
-        "javascript": 2,
-    }
-}
+import undetected_chromedriver as uc
 
-#chrome_options.add_argument("window-size=1920x1480")
-#chrome_options.add_argument("disable-dev-shm-usage")
-#chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--no-sandbox")
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
+
+options = webdriver.ChromeOptions() 
+options.add_argument("start-maximized")
+options.add_argument('--headless')
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
+driver = uc.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
+
 
 # %%
 def get_webpage(gene):
